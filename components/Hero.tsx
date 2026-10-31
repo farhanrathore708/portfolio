@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { socials } from "@/components/SocialLinks";
 
 const container = {
   hidden: {},
@@ -74,6 +75,23 @@ export default function Hero() {
           >
             Contact Me
           </a>
+        </motion.div>
+
+        {/* Socials */}
+        <motion.div variants={fadeUp} className="mt-12 flex items-center gap-3">
+          {socials.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              title={label}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60 text-slate-400 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-accent/60 hover:text-accent-bright hover:shadow-[0_0_25px_-5px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+            >
+              <Icon className="h-5 w-5" />
+            </a>
+          ))}
         </motion.div>
       </motion.div>
 
