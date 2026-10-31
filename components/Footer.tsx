@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion, type Variants } from "framer-motion";
 import { Mail, Phone } from "lucide-react";
 import { whatsappIcon as WhatsappIcon, socials } from "@/components/SocialLinks";
+
+const emptySubscribe = () => () => {};
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
@@ -15,12 +17,15 @@ const fadeUp: Variants = {
 };
 
 export default function Footer() {
-  // Compute the year after mount — reading `new Date()` at prerender time
-  // is rejected by Next.js cacheComponents, so we keep it client-only.
-  const [year, setYear] = useState<number | null>(null);
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
+  // `new Date()` in a Client Component is flagged by Next.js cacheComponents
+  // during prerendering. Reading it via useSyncExternalStore keeps the prerender
+  // snapshot deterministic while rendering the current year on the client without
+  // cascading renders.
+  const year = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date().getFullYear(),
+    () => null
+  );
 
   return (
     <footer id="contact" className="relative border-t border-slate-900">

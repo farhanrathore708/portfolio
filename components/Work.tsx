@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { projects } from "@/lib/projects";
 import ProjectCard from "@/components/ProjectCard";
+import ProjectLightbox from "@/components/ProjectLightbox";
 
 export default function Work() {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   return (
     <section id="work" className="relative mx-auto max-w-6xl px-6 pt-24 pb-32">
       {/* Section header */}
@@ -17,16 +23,28 @@ export default function Work() {
         <p className="max-w-sm text-sm leading-relaxed text-slate-400 sm:text-right">
           Real work sheets — social media posts, YouTube thumbnails, banners,
           visiting cards, logos, invitation &amp; menu cards, and standee
-          design.
+          design. Click any card to preview full size.
         </p>
       </div>
 
       {/* Responsive grid: 1 col mobile → 2 tablet → 3 desktop */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {projects.map((project, index) => (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            onOpen={() => setSelectedIndex(index)}
+          />
         ))}
       </div>
+
+      {/* Interactive Lightbox / Modal */}
+      <ProjectLightbox
+        projects={projects}
+        currentIndex={selectedIndex}
+        onClose={() => setSelectedIndex(null)}
+        onNavigate={setSelectedIndex}
+      />
     </section>
   );
 }

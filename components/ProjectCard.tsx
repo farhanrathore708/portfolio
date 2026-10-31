@@ -7,27 +7,40 @@ import type { Project } from "@/lib/projects";
 
 interface ProjectCardProps {
   project: Project;
+  onOpen?: () => void;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
   return (
-    <motion.a
-      href="#"
+    <motion.button
+      type="button"
+      onClick={onOpen}
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="group relative block overflow-hidden rounded-2xl border border-slate-800/70 bg-slate-900/40 transition-colors duration-300 hover:border-accent/50 focus-visible:outline-2 focus-visible:outline-accent-bright"
+      className="group relative block w-full cursor-pointer text-left overflow-hidden rounded-2xl border border-slate-800/70 bg-slate-900/40 transition-colors duration-300 hover:border-accent/50 focus-visible:outline-2 focus-visible:outline-accent-bright"
     >
       {/* Image — zooms subtly on hover */}
       <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
-          src={project.imageUrl}
-          alt={project.title}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+        {project.imageUrl.startsWith("http") ? (
+          // Standard img tag for external URLs to prevent Next.js image domain errors
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={project.imageUrl}
+            alt={project.title}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <Image
+            src={project.imageUrl}
+            alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+        )}
 
         {/* Gradient overlay — fades in on hover to reveal the caption */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -47,6 +60,6 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </span>
         </div>
       </div>
-    </motion.a>
+    </motion.button>
   );
 }
