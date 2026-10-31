@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { projects } from "@/lib/projects";
+import { projects, type Project } from "@/lib/projects";
 import ProjectCard from "@/components/ProjectCard";
 import ProjectLightbox from "@/components/ProjectLightbox";
 
 export default function Work() {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
+  const handleOpenProject = (project: Project) => {
+    setSelectedProject(project);
+    setCurrentImageIndex(0);
+  };
+
+  const handleClose = () => {
+    setSelectedProject(null);
+    setCurrentImageIndex(0);
+  };
 
   return (
     <section id="work" className="relative mx-auto max-w-6xl px-4 pt-16 pb-24 sm:px-6 sm:pt-24 sm:pb-32">
@@ -23,27 +34,27 @@ export default function Work() {
         <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-400 sm:text-right">
           Real work sheets — social media posts, YouTube thumbnails, banners,
           visiting cards, logos, invitation &amp; menu cards, and standee
-          design. Click any card to preview full size.
+          design. Click any card to preview all designs in that category.
         </p>
       </div>
 
       {/* Responsive grid: 1 col mobile → 2 tablet → 3 desktop */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project, index) => (
+        {projects.map((project) => (
           <ProjectCard
             key={project.id}
             project={project}
-            onOpen={() => setSelectedIndex(index)}
+            onOpen={() => handleOpenProject(project)}
           />
         ))}
       </div>
 
       {/* Interactive Lightbox / Modal */}
       <ProjectLightbox
-        projects={projects}
-        currentIndex={selectedIndex}
-        onClose={() => setSelectedIndex(null)}
-        onNavigate={setSelectedIndex}
+        project={selectedProject}
+        currentImageIndex={currentImageIndex}
+        onClose={handleClose}
+        onNavigate={setCurrentImageIndex}
       />
     </section>
   );

@@ -6,31 +6,33 @@ import { X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import type { Project } from "@/lib/projects";
 
 interface ProjectLightboxProps {
-  projects: Project[];
-  currentIndex: number | null;
+  project: Project | null;
+  currentImageIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
 }
 
 export default function ProjectLightbox({
-  projects,
-  currentIndex,
+  project,
+  currentImageIndex,
   onClose,
   onNavigate,
 }: ProjectLightboxProps) {
-  const isOpen = currentIndex !== null && currentIndex >= 0 && currentIndex < projects.length;
-  const project = isOpen ? projects[currentIndex] : null;
+  const isOpen = project !== null;
+  const images = project ? (project.images?.length ? project.images : [project.imageUrl]) : [];
+  const totalImages = images.length;
+  const currentImage = images[currentImageIndex] ?? images[0] ?? "";
 
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!isOpen || currentIndex === null) return;
+      if (!isOpen || totalImages === 0) return;
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") onNavigate((currentIndex + 1) % projects.length);
-      if (e.key === "ArrowLeft") onNavigate((currentIndex - 1 + projects.length) % projects.length);
+      if (e.key === "ArrowRight") onNavigate((currentImageIndex + 1) % totalImages);
+      if (e.key === "ArrowLeft") onNavigate((currentImageIndex - 1 + totalImages) % totalImages);
     },
-    [isOpen, currentIndex, projects.length, onClose, onNavigate]
+    [isOpen, currentImageIndex, totalImages, onClose, onNavigate]
   );
 
   useEffect(() => {
@@ -51,28 +53,26 @@ export default function ProjectLightbox({
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null || currentIndex === null) return;
+    if (touchStartX === null || totalImages <= 1) return;
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX - touchEndX;
 
     // Minimum swipe threshold of 45px
     if (Math.abs(diff) > 45) {
       if (diff > 0) {
-        // Swiped left -> Next
-        onNavigate((currentIndex + 1) % projects.length);
+        // Swiped left -> Next image in this card
+        onNavigate((currentImageIndex + 1) % totalImages);
       } else {
-        // Swiped right -> Prev
-        onNavigate((currentIndex - 1 + projects.length) % projects.length);
+        // Swiped right -> Previous image in this card
+        onNavigate((currentImageIndex - 1 + totalImages) % totalImages);
       }
     }
     setTouchStartX(null);
   };
 
-  const currentNum = (currentIndex ?? 0) + 1;
-  const totalNum = projects.length;
   const whatsappUrl = project
     ? `https://wa.me/923705519039?text=${encodeURIComponent(
-        `Hi Farhan, I saw your "${project.title}" (${project.category}) work on your portfolio and would like to discuss a project!`
+        `Hi Farhan, I saw your "${project.title}" (Design ${currentImageIndex + 1} of ${totalImages}) on your portfolio and would like to discuss a project!`
       )}`
     : "";
 
@@ -105,8 +105,11 @@ export default function ProjectLightbox({
                 <span className="rounded-full border border-accent/40 bg-accent/10 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-accent-bright">
                   {project.category}
                 </span>
-                <span className="text-xs font-medium text-slate-400">
-                  {currentNum} / {totalNum}
+                <span className="text-xs font-medium text-slate-300">
+                  {project.title}
+                </span>
+                <span className="rounded-md bg-slate-800/80 px-2 py-0.5 text-xs font-semibold text-slate-400">
+                  {currentImageIndex + 1} / {totalImages}
                 </span>
               </div>
 
@@ -120,59 +123,66 @@ export default function ProjectLightbox({
               </button>
             </div>
 
-            {/* Image preview area with prev/next buttons and touch swipe support */}
+            {/* Image preview area with prev/next buttons (cycling within this card only) */}
             <div
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
               className="relative flex flex-1 items-center justify-center overflow-hidden bg-slate-950/70 p-2 sm:p-6 select-none"
             >
-              {/* Prev button */}
-              <button
-                type="button"
-                onClick={() =>
-                  onNavigate((currentIndex - 1 + projects.length) % projects.length)
-                }
-                aria-label="Previous project"
-                className="absolute left-2 sm:left-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
-              >
-                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
+              {/* Prev button — only if card has multiple images */}
+              {totalImages > 1 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    onNavigate((currentImageIndex - 1 + totalImages) % totalImages)
+                  }
+                  aria-label="Previous design in this category"
+                  className="absolute left-2 sm:left-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+                >
+                  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </button>
+              )}
 
-              {/* Project Image */}
+              {/* Current Project Image */}
               <div className="flex max-h-[58vh] sm:max-h-[66vh] w-full items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  key={project.imageUrl}
-                  src={project.imageUrl}
-                  alt={project.title}
+                  key={currentImage}
+                  src={currentImage}
+                  alt={`${project.title} - design ${currentImageIndex + 1}`}
                   className="max-h-[56vh] sm:max-h-[64vh] w-auto max-w-full rounded-lg object-contain shadow-2xl transition-transform duration-300"
                 />
               </div>
 
-              {/* Next button */}
-              <button
-                type="button"
-                onClick={() =>
-                  onNavigate((currentIndex + 1) % projects.length)
-                }
-                aria-label="Next project"
-                className="absolute right-2 sm:right-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
-              >
-                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
+              {/* Next button — only if card has multiple images */}
+              {totalImages > 1 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    onNavigate((currentImageIndex + 1) % totalImages)
+                  }
+                  aria-label="Next design in this category"
+                  className="absolute right-2 sm:right-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+                >
+                  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                </button>
+              )}
             </div>
 
             {/* Bottom details & action bar */}
             <div className="flex flex-col gap-2.5 border-t border-slate-800/80 bg-slate-900 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-3.5">
               <div>
-                <h3 className="text-base font-bold text-slate-100 sm:text-xl">
-                  {project.title}
+                <h3 className="text-base font-bold text-slate-100 sm:text-lg">
+                  {project.title}{" "}
+                  <span className="text-xs font-normal text-slate-400">
+                    (Design {currentImageIndex + 1} of {totalImages})
+                  </span>
                 </h3>
                 <p className="hidden text-xs text-slate-400 sm:block">
-                  Use <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">←</kbd> and <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">→</kbd> keys to navigate, <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">ESC</kbd> to close.
+                  Next/Prev shows more designs from this card. Use <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">←</kbd> and <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">→</kbd> keys, <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">ESC</kbd> to close.
                 </p>
                 <p className="text-[11px] text-slate-400 sm:hidden">
-                  Swipe left or right to switch projects
+                  Swipe left or right to see all designs in this card
                 </p>
               </div>
 
