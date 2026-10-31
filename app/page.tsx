@@ -6,10 +6,6 @@ import About from "@/components/About";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  // Compute in the Server Component — `new Date()` is flagged by
-  // cacheComponents when read directly inside a Client Component.
-  const year = new Date().getFullYear();
-
   return (
     <div className="relative overflow-x-clip">
       <BackgroundFX />
@@ -18,7 +14,7 @@ export default function Home() {
         <Hero />
         <Work />
         <About />
-        <Footer year={year} />
+        <Footer />
       </main>
     </div>
   );

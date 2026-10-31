@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, type Variants } from "framer-motion";
 import { Mail } from "lucide-react";
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
@@ -69,7 +70,14 @@ const socials = [
   { label: "LinkedIn", href: "https://linkedin.com", Icon: LinkedinIcon },
 ];
 
-export default function Footer({ year }: { year: number }) {
+export default function Footer() {
+  // Compute the year after mount — reading `new Date()` at prerender time
+  // is rejected by Next.js cacheComponents, so we keep it client-only.
+  const [year, setYear] = useState<number | null>(null);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer id="contact" className="relative border-t border-slate-900">
       {/* CTA */}
@@ -143,7 +151,7 @@ export default function Footer({ year }: { year: number }) {
       <div className="border-t border-slate-900">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-xs text-slate-500 sm:flex-row">
           <p>
-            © {year} Farhan. All rights reserved.
+            © {year ?? ""} Farhan. All rights reserved.
           </p>
           <p>
             Designed &amp; built with <span className="text-accent-bright">Farhan.</span>
