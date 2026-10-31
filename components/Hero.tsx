@@ -23,7 +23,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 pt-24 text-center"
+      className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-4 pt-20 text-center sm:px-6 sm:pt-24"
     >
       <motion.div
         variants={container}
@@ -42,7 +42,7 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           variants={fadeUp}
-          className="bg-gradient-to-br from-slate-100 via-slate-200 to-slate-500 bg-clip-text text-5xl font-extrabold tracking-tight text-transparent sm:text-6xl md:text-7xl"
+          className="bg-gradient-to-br from-slate-100 via-slate-200 to-slate-500 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl md:text-7xl"
         >
           Crafting Visual Stories.
         </motion.h1>
@@ -50,7 +50,7 @@ export default function Hero() {
         {/* Sub-headline */}
         <motion.p
           variants={fadeUp}
-          className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400 sm:text-xl"
+          className="mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:text-xl"
         >
           Hi, I&apos;m Farhan Rathore. A Graphic Designer specializing in{" "}
           <span className="text-accent-bright">Thumbnails</span>,{" "}
@@ -62,17 +62,17 @@ export default function Hero() {
         {/* CTAs */}
         <motion.div
           variants={fadeUp}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
+          className="mt-10 flex w-full flex-col items-center justify-center gap-3.5 sm:w-auto sm:flex-row sm:gap-4"
         >
           <a
             href="#work"
-            className="group inline-flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent-neon px-8 text-sm font-semibold text-white transition-shadow duration-300 hover:shadow-[0_0_40px_-5px_rgba(129,140,248,0.6)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+            className="group inline-flex h-12 w-full sm:w-auto items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent-neon px-8 text-sm font-semibold text-white transition-shadow duration-300 hover:shadow-[0_0_40px_-5px_rgba(129,140,248,0.6)] focus-visible:outline-2 focus-visible:outline-accent-bright"
           >
             View My Work
           </a>
           <a
             href="#contact"
-            className="inline-flex h-12 items-center justify-center rounded-full border border-slate-700 px-8 text-sm font-semibold text-slate-300 transition-colors duration-300 hover:border-accent-bright hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-accent-bright"
+            className="inline-flex h-12 w-full sm:w-auto items-center justify-center rounded-full border border-slate-700 px-8 text-sm font-semibold text-slate-300 transition-colors duration-300 hover:border-accent-bright hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-accent-bright"
           >
             Contact Me
           </a>

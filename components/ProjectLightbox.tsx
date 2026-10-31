@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import type { Project } from "@/lib/projects";
@@ -20,6 +20,8 @@ export default function ProjectLightbox({
 }: ProjectLightboxProps) {
   const isOpen = currentIndex !== null && currentIndex >= 0 && currentIndex < projects.length;
   const project = isOpen ? projects[currentIndex] : null;
+
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -44,6 +46,28 @@ export default function ProjectLightbox({
     };
   }, [isOpen, handleKeyDown]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || currentIndex === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+
+    // Minimum swipe threshold of 45px
+    if (Math.abs(diff) > 45) {
+      if (diff > 0) {
+        // Swiped left -> Next
+        onNavigate((currentIndex + 1) % projects.length);
+      } else {
+        // Swiped right -> Prev
+        onNavigate((currentIndex - 1 + projects.length) % projects.length);
+      }
+    }
+    setTouchStartX(null);
+  };
+
   const currentNum = (currentIndex ?? 0) + 1;
   const totalNum = projects.length;
   const whatsappUrl = project
@@ -55,7 +79,7 @@ export default function ProjectLightbox({
   return (
     <AnimatePresence>
       {isOpen && project && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 md:p-8">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -73,16 +97,16 @@ export default function ProjectLightbox({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/95 shadow-2xl shadow-black/80"
+            className="relative z-10 flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/95 shadow-2xl shadow-black/80"
           >
             {/* Top header bar */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 px-4 py-3 sm:px-6">
-              <div className="flex items-center gap-3">
-                <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-bright">
+            <div className="flex items-center justify-between border-b border-slate-800/80 px-3 py-2.5 sm:px-6 sm:py-3">
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <span className="rounded-full border border-accent/40 bg-accent/10 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-accent-bright">
                   {project.category}
                 </span>
                 <span className="text-xs font-medium text-slate-400">
-                  {currentNum} of {totalNum}
+                  {currentNum} / {totalNum}
                 </span>
               </div>
 
@@ -90,14 +114,18 @@ export default function ProjectLightbox({
                 type="button"
                 onClick={onClose}
                 aria-label="Close preview"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-800 text-slate-400 transition-colors hover:border-slate-600 hover:bg-slate-800 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-accent-bright"
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-slate-800 text-slate-400 transition-colors hover:border-slate-600 hover:bg-slate-800 hover:text-slate-100 focus-visible:outline-2 focus-visible:outline-accent-bright"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Image preview area with prev/next buttons */}
-            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-slate-950/60 p-2 sm:p-6">
+            {/* Image preview area with prev/next buttons and touch swipe support */}
+            <div
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="relative flex flex-1 items-center justify-center overflow-hidden bg-slate-950/70 p-2 sm:p-6 select-none"
+            >
               {/* Prev button */}
               <button
                 type="button"
@@ -105,19 +133,19 @@ export default function ProjectLightbox({
                   onNavigate((currentIndex - 1 + projects.length) % projects.length)
                 }
                 aria-label="Previous project"
-                className="absolute left-3 z-20 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-800 bg-slate-900/80 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+                className="absolute left-2 sm:left-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
               >
-                <ChevronLeft size={22} />
+                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
 
               {/* Project Image */}
-              <div className="flex max-h-[66vh] w-full items-center justify-center">
+              <div className="flex max-h-[58vh] sm:max-h-[66vh] w-full items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   key={project.imageUrl}
                   src={project.imageUrl}
                   alt={project.title}
-                  className="max-h-[64vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+                  className="max-h-[56vh] sm:max-h-[64vh] w-auto max-w-full rounded-lg object-contain shadow-2xl transition-transform duration-300"
                 />
               </div>
 
@@ -128,29 +156,32 @@ export default function ProjectLightbox({
                   onNavigate((currentIndex + 1) % projects.length)
                 }
                 aria-label="Next project"
-                className="absolute right-3 z-20 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-800 bg-slate-900/80 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+                className="absolute right-2 sm:right-4 z-20 flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/85 text-slate-200 backdrop-blur-sm transition-all hover:scale-105 hover:border-accent-bright hover:bg-slate-800 hover:text-white hover:shadow-[0_0_20px_-3px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
               >
-                <ChevronRight size={22} />
+                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
 
             {/* Bottom details & action bar */}
-            <div className="flex flex-col gap-3 border-t border-slate-800/80 bg-slate-900 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex flex-col gap-2.5 border-t border-slate-800/80 bg-slate-900 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-3.5">
               <div>
-                <h3 className="text-lg font-bold text-slate-100 sm:text-xl">
+                <h3 className="text-base font-bold text-slate-100 sm:text-xl">
                   {project.title}
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="hidden text-xs text-slate-400 sm:block">
                   Use <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">←</kbd> and <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">→</kbd> keys to navigate, <kbd className="rounded border border-slate-700 bg-slate-800 px-1 py-0.5 text-[10px]">ESC</kbd> to close.
+                </p>
+                <p className="text-[11px] text-slate-400 sm:hidden">
+                  Swipe left or right to switch projects
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center">
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-10 items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent-neon px-5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 hover:shadow-indigo-500/40 focus-visible:outline-2 focus-visible:outline-accent-bright"
+                  className="inline-flex h-9 sm:h-10 w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent-neon px-4 sm:px-5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 hover:shadow-indigo-500/40 focus-visible:outline-2 focus-visible:outline-accent-bright"
                 >
                   <MessageCircle size={15} />
                   Inquire on WhatsApp
