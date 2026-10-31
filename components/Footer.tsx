@@ -59,7 +59,7 @@ export default function Footer() {
           className="mt-10"
         >
           <a
-            href="mailto:hello@farhan.design"
+            href="mailto:farhanrathore707@gmail.com"
             className="group inline-flex h-14 items-center gap-3 rounded-full bg-gradient-to-r from-accent to-accent-neon px-10 text-sm font-semibold text-white transition-shadow duration-300 hover:shadow-[0_0_50px_-8px_rgba(129,140,248,0.7)] focus-visible:outline-2 focus-visible:outline-accent-bright"
           >
             <Mail size={18} className="transition-transform duration-300 group-hover:-rotate-12" />

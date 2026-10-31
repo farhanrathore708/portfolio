@@ -1,8 +1,8 @@
 export type ProjectCategory =
-  | "Brand Identity"
-  | "UI/UX"
   | "Social Media"
-  | "Digital Art";
+  | "Thumbnail Design"
+  | "Print Design"
+  | "Branding";
 
 export interface Project {
   id: number;
@@ -11,41 +11,52 @@ export interface Project {
   imageUrl: string;
 }
 
+/**
+ * Real projects, taken from the section headers of Farhan's portfolio PDF.
+ * Each image is the actual artwork sheet extracted from the PDF
+ * (kept locally in /public/work).
+ */
 export const projects: Project[] = [
   {
     id: 1,
-    title: "Aurora — Rebrand & Identity",
-    category: "Brand Identity",
-    imageUrl: "https://picsum.photos/seed/aurora-brand/900/675",
+    title: "Social Media Posts",
+    category: "Social Media",
+    imageUrl: "/work/social-media-posts.jpg",
   },
   {
     id: 2,
-    title: "FinFlow — Analytics Dashboard",
-    category: "UI/UX",
-    imageUrl: "https://picsum.photos/seed/finflow-ui/900/675",
+    title: "YouTube Thumbnails",
+    category: "Thumbnail Design",
+    imageUrl: "/work/youtube-thumbnails.jpg",
   },
   {
     id: 3,
-    title: "Neon Threads — Launch Campaign",
-    category: "Social Media",
-    imageUrl: "https://picsum.photos/seed/neon-threads/900/675",
+    title: "Banner Design",
+    category: "Print Design",
+    imageUrl: "/work/banner-design.jpg",
   },
   {
     id: 4,
-    title: "Kaffa Coffee Co. — Packaging",
-    category: "Brand Identity",
-    imageUrl: "https://picsum.photos/seed/kaffa-coffee/900/675",
+    title: "Visiting Card Design",
+    category: "Branding",
+    imageUrl: "/work/visiting-card-design.jpg",
   },
   {
     id: 5,
-    title: "Verse — Reading App Redesign",
-    category: "UI/UX",
-    imageUrl: "https://picsum.photos/seed/verse-app/900/675",
+    title: "Logo Design",
+    category: "Branding",
+    imageUrl: "/work/logo-design.jpg",
   },
   {
     id: 6,
-    title: "Bloom — Festival Poster Series",
-    category: "Digital Art",
-    imageUrl: "https://picsum.photos/seed/bloom-poster/900/675",
+    title: "Invitation & Menu Card Design",
+    category: "Print Design",
+    imageUrl: "/work/invitation-menu-cards.jpg",
+  },
+  {
+    id: 7,
+    title: "Standee Design",
+    category: "Print Design",
+    imageUrl: "/work/standee-design.jpg",
   },
 ];

@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Portfolio PDF is too large for GitHub (175MB) — keep it local only
+public/Portfolio.pdf

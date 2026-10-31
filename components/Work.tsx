@@ -15,8 +15,9 @@ export default function Work() {
           </h2>
         </div>
         <p className="max-w-sm text-sm leading-relaxed text-slate-400 sm:text-right">
-          A curated selection of projects across brand identity, digital
-          products, and visual campaigns.
+          Real work sheets — social media posts, YouTube thumbnails, banners,
+          visiting cards, logos, invitation &amp; menu cards, and standee
+          design.
         </p>
       </div>
 

@@ -13,14 +13,14 @@ const fadeUp: Variants = {
 };
 
 const skills = [
-  "Brand Identity",
-  "Logo Design",
-  "UI/UX Design",
-  "Digital Illustration",
-  "Typography",
-  "Packaging Design",
-  "Motion Graphics",
+  "Photoshop",
+  "Illustrator",
+  "Canva",
+  "After Effects",
+  "Thumbnail Design",
   "Social Media Design",
+  "Branding",
+  "Poster Design",
 ];
 
 export default function About() {
@@ -42,8 +42,8 @@ export default function About() {
           <div className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-accent/30 to-accent-neon/30 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-slate-800">
             <Image
-              src="https://picsum.photos/seed/farhan-portrait/900/900"
-              alt="Portrait of Farhan"
+              src="/profile.jpeg"
+              alt="Portrait of Farhan Rathore"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -79,16 +79,21 @@ export default function About() {
             className="mt-6 space-y-4 text-base leading-relaxed text-slate-400"
           >
             <p>
-              I&apos;m Farhan — a multidisciplinary graphic designer who turns
-              complex ideas into clean, memorable visuals. Whether it&apos;s a
-              full brand identity, a digital product interface, or a piece of
-              digital art, I obsess over the details that make design feel
-              effortless.
+              I&apos;m a passionate{" "}
+              <span className="text-accent-bright">Graphic Designer</span> who
+              loves turning ideas into eye-catching visual designs. I
+              specialize in creating{" "}
+              <span className="text-accent-bright">Thumbnails</span>,{" "}
+              <span className="text-accent-bright">Social Media Posts</span>,{" "}
+              <span className="text-accent-bright">Posters</span>,{" "}
+              <span className="text-accent-bright">Banners</span> and{" "}
+              <span className="text-accent-bright">Branding</span> that help
+              brands stand out and connect with their audience.
             </p>
             <p>
-              This is placeholder bio copy — swap it out for the real story on
-              how Farhan works, who he&apos;s worked with, and what drives the
-              process.
+              I combine creativity with strategy to deliver designs that are
+              not only visually appealing but also effective in achieving
+              goals.
             </p>
           </motion.div>
 

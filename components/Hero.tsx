@@ -52,10 +52,11 @@ export default function Hero() {
           variants={fadeUp}
           className="mt-6 max-w-xl text-lg leading-relaxed text-slate-400 sm:text-xl"
         >
-          Hi, I&apos;m Farhan. A Graphic Designer specializing in{" "}
-          <span className="text-accent-bright">brand identity</span>,{" "}
-          <span className="text-accent-bright">UI/UX</span>, and{" "}
-          <span className="text-accent-bright">digital art</span>.
+          Hi, I&apos;m Farhan Rathore. A Graphic Designer specializing in{" "}
+          <span className="text-accent-bright">Thumbnails</span>,{" "}
+          <span className="text-accent-bright">Social Media Posts</span> and{" "}
+          <span className="text-accent-bright">Posters &amp; Banners</span> that
+          help brands stand out.
         </motion.p>
 
         {/* CTAs */}
