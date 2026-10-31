@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Mail } from "lucide-react";
-import { socials } from "@/components/SocialLinks";
+import { Mail, Phone } from "lucide-react";
+import { whatsappIcon as WhatsappIcon, socials } from "@/components/SocialLinks";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
@@ -88,6 +88,34 @@ export default function Footer() {
               <Icon className="h-5 w-5" />
             </a>
           ))}
+        </motion.div>
+
+        {/* Phone: call + WhatsApp */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-8 flex items-center justify-center gap-3"
+        >
+          <a
+            href="tel:+923705519039"
+            aria-label="Call Farhan"
+            title="Call +92 370 5519039"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-800 text-slate-400 transition-all duration-300 hover:scale-110 hover:border-accent/60 hover:text-accent-bright hover:shadow-[0_0_25px_-5px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+          >
+            <Phone className="h-5 w-5" />
+          </a>
+          <span className="text-sm font-semibold tracking-wide text-slate-300 sm:text-base">
+            +92 370 5519039
+          </span>
+          <a
+            href="https://wa.me/923705519039"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp Farhan"
+            title="WhatsApp +92 370 5519039"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-800 text-slate-400 transition-all duration-300 hover:scale-110 hover:border-accent/60 hover:text-accent-bright hover:shadow-[0_0_25px_-5px_rgba(129,140,248,0.5)] focus-visible:outline-2 focus-visible:outline-accent-bright"
+          >
+            <WhatsappIcon className="h-5 w-5" />
+          </a>
         </motion.div>
       </div>
 
